@@ -1,0 +1,16 @@
+*** Settings ***
+Library           SSHLibrary
+
+*** Variables ***
+${HOST}           10.53.69.199
+${USERNAME}       root
+${PASSWORD}       test123
+
+*** Test Cases ***
+test1
+    Open Connection    ${HOST}
+    Login    ${USERNAME}    ${PASSWORD}
+    ${fs}=    Execute Command    df -Th
+    ${freemem}=    Execute Command    awk '/^Mem/ {print $4}' <(free -g)
+    ${swapmem}=    Execute Command    awk '/^Swap/ {print $4}' <(free -g)
+    Should Be True    ${freemem} > 10 and ${swapmem} > 6
